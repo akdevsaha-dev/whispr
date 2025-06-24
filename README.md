@@ -1,36 +1,160 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Whispr - Modern Real-Time Chat App
 
-## Getting Started
+Whispr is a modern, real-time group chatting application with a sleek, intuitive user interface optimized for both desktop and mobile devices. Powered by Next.js for a responsive frontend, [Socket.IO](http://socket.io/) for instant messaging, and Prisma with PostgreSQL for efficient data storage, Whispr allows users to create and join group chats, send real-time messages, and enjoy a clean, distraction-free experience. Easily deployable on Vercel for the frontend and Heroku for the backend, it supports custom domains (e.g., [whispr.in](http://whispr.in/)), making it perfect for small-scale, interactive group communication.
 
-First, run the development server:
+## ✨ Features
+
+---
+
+Modern UI: Responsive, user-friendly design for seamless chatting on any device.
+
+Real-Time Messaging: Instant group chat updates powered by [Socket.IO](http://socket.io/).
+
+Group Management: Effortlessly create, join, or leave chat groups.
+
+Persistent Storage: Securely store group metadata and messages in PostgreSQL via Prisma.
+
+Custom Domain Support: Host on your own domain (e.g., [whispr.in](http://whispr.in/))
+
+## 🛠️ Tech Stack
+
+---
+
+Frontend: Next.js (React framework for static/SSR rendering)
+
+Backend: Node.js with [Socket.IO](http://socket.io/) (real-time WebSocket server)
+
+Database: PostgreSQL with Prisma ORM
+
+Hosting: Vercel (frontend), Heroku (backend)
+
+Dependencies: Axios (API requests), Prisma Client
+
+## 📋 Prerequisites
+
+---
+
+Before setting up Whispr, ensure you have the following:
+Node.js (v18 or higher): Download
+
+PostgreSQL Database: Use a free provider like Neon or Supabase
+
+Vercel account: Sign up
+
+Heroku account: Sign up
+
+Git: Download
+
+GitHub account: Sign up
+
+## ⚙️ Setup Instructions
+
+---
+
+### 1. Clone the Repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/whispr.git
+cd whispr
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Set Up PostgreSQL Database (Neon)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Sign up at Neon and create a free PostgreSQL database.
+2. Copy the connection URL (e.g., postgresql://user:pass@host:port/dbname?sslmode=require).
+3. Save the URL for use in environment variables.
+4. Set DATABASE_URL in backend/.env:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```
+   DATABASE_URL=your-neon-postgresql-url
+   ```
 
-## Learn More
+5. Run migrations:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   npx prisma migrate dev --name init
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Configure Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Frontend** (frontend/.env.local):
 
-## Deploy on Vercel
+```
+NEXT_PUBLIC_BACKEND_URL=https://your-backend.herokuapp.com
+DATABASE_URL=your-neon-postgresql-url
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Backend** (backend/.env):
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+DATABASE_URL=your-neon-postgresql-url
+PORT=3000
+```
+
+### 4. Install Dependencies
+
+**Frontend**:
+
+```bash
+cd frontend
+npm install
+```
+
+**Backend**:
+
+```bash
+cd ../backend
+npm install
+```
+
+### 5. Run Locally
+
+**Backend**:
+
+```bash
+cd backend
+npm start
+```
+
+**Frontend**:
+
+```bash
+cd frontend
+npm run dev
+```
+
+Open http://localhost:3000 in your browser to test the app.
+
+## 🤝 Contributing
+
+Contributions are welcome! Follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a feature branch:
+
+   ```bash
+   git checkout -b feature-name
+   ```
+
+3. Commit changes:
+
+   ```bash
+   git commit -m "Add feature"
+   ```
+
+4. Push to the branch:
+
+   ```bash
+   git push origin feature-name
+   ```
+
+5. Open a pull request.
+
+## 📜 License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- Built with inspiration from modern chat apps and real-time communication tools.
+- Special thanks to Vercel, Neon, and Prisma for their free hosting and database services
