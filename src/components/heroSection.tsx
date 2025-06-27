@@ -99,14 +99,14 @@ export const HeroSection = () => {
               <div className="rounded-[10px] bg-black px-2 py-[4px]">
                 <MoveRight color="white" width={13} />
               </div>
-              <Link href="/" className="text-sm">
+              <Link href="/login" className="text-sm">
                 Get started
               </Link>
             </motion.div>
           </div>
         </div>
         <div className="h-[400px] w-[70%]"></div>
-        <div className="mb-10 flex h-[250px] w-full justify-center">
+        <div className="mb-6 flex h-[250px] w-full justify-center">
           <div className="grid w-[55%] grid-cols-2">
             <div className="col-span-1 border-r-[1px] border-r-neutral-200 px-12 py-10">
               <div className="text-2xl font-semibold antialiased">
@@ -131,8 +131,24 @@ export const HeroSection = () => {
           </div>
         </div>
       </div>
-      <div className="flex min-h-screen w-full justify-center">
-        <div className="w-[73%]"> </div>
+      <div className="mt-19 flex min-h-screen w-full justify-center">
+        <div className="h-16 w-[57%]">
+          <div className="w-[500px]">
+            <div className="tracking-none pr-4 text-[44px] leading-13 font-semibold">
+              Let go of the noise. Keep the people.
+            </div>
+            <div className="mt-5 pr-12">
+              Whispr is built for people who actually care about staying close —
+              not just sending texts. We combine the speed of modern messaging
+              with the warmth of real conversation, helping you stay
+              effortlessly in sync with the people who matter, every day.
+            </div>
+            <div className="mt-5 pr-12">
+              You shouldn’t have to scroll through clutter, dig through threads,
+              or switch between five different platforms just to stay close.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
