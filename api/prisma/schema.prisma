@@ -13,3 +13,85 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id             Int           @id @default(autoincrement())
+  username       String        @unique
+  email          String        @unique
+  passwordHash   String
+  displayName    String?
+  profilePicture String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  lastSeen       DateTime?
+  status         String?       @default("offline")
+  messages       Message[]     @relation("SentMessages")
+  chats          Chat[]        @relation("ChatParticipants")
+  groupMembers   GroupMember[]
+  settings       UserSettings?
+  readReceipts   ReadReceipt[] @relation("UserReadReceipts") // Added opposite relation field
+}
+
+model Chat {
+  id            Int           @id @default(autoincrement())
+  isGroupChat   Boolean       @default(false)
+  name          String? // For group chats
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  participants  User[]        @relation("ChatParticipants")
+  messages      Message[]
+  groupMembers  GroupMember[]
+  lastMessageId Int?          @unique // Foreign key for lastMessage
+  lastMessage   Message?      @relation("LastMessage", fields: [lastMessageId], references: [id], onDelete: SetNull)
+}
+
+model GroupMember {
+  id       Int      @id @default(autoincrement())
+  userId   Int
+  chatId   Int
+  role     String   @default("member") // e.g., "admin", "member"
+  joinedAt DateTime @default(now())
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chat     Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, chatId])
+}
+
+model Message {
+  id                Int           @id @default(autoincrement())
+  chatId            Int
+  senderId          Int
+  content           String
+  contentType       String        @default("text")
+  sentAt            DateTime      @default(now())
+  editedAt          DateTime?
+  isEdited          Boolean       @default(false)
+  status            String        @default("sent")
+  replyToId         Int?
+  chat              Chat          @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  sender            User          @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  replyTo           Message?      @relation("Replies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies           Message[]     @relation("Replies")
+  readReceipts      ReadReceipt[]
+  lastMessageInChat Chat?         @relation("LastMessage")
+}
+
+model ReadReceipt {
+  id        Int      @id @default(autoincrement())
+  messageId Int
+  userId    Int
+  readAt    DateTime @default(now())
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User     @relation("UserReadReceipts", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+}
+
+model UserSettings {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notifications   Boolean  @default(true)
+  privacySettings Json? // e.g., { "showLastSeen": true, "showStatus": true }
+  updatedAt       DateTime @updatedAt
+}
