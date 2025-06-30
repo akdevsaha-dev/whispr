@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -15,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id             Int           @id @default(autoincrement())
+  id             String        @id @default(uuid())
   username       String        @unique
   email          String        @unique
   passwordHash   String
@@ -27,47 +21,47 @@ model User {
   status         String?       @default("offline")
   messages       Message[]     @relation("SentMessages")
   chats          Chat[]        @relation("ChatParticipants")
-  groupMembers   GroupMember[]
+  groupMembers   GroupMember[] @relation("UserGroupMembers")
   settings       UserSettings?
-  readReceipts   ReadReceipt[] @relation("UserReadReceipts") // Added opposite relation field
+  readReceipts   ReadReceipt[] @relation("UserReadReceipts")
 }
 
 model Chat {
-  id            Int           @id @default(autoincrement())
+  id            String        @id @default(uuid())
   isGroupChat   Boolean       @default(false)
-  name          String? // For group chats
+  name          String?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   participants  User[]        @relation("ChatParticipants")
   messages      Message[]
-  groupMembers  GroupMember[]
-  lastMessageId Int?          @unique // Foreign key for lastMessage
+  groupMembers  GroupMember[] @relation("ChatGroupMembers")
+  lastMessageId String?       @unique
   lastMessage   Message?      @relation("LastMessage", fields: [lastMessageId], references: [id], onDelete: SetNull)
 }
 
 model GroupMember {
-  id       Int      @id @default(autoincrement())
-  userId   Int
-  chatId   Int
-  role     String   @default("member") // e.g., "admin", "member"
+  id       String   @id @default(uuid())
+  userId   String
+  chatId   String
+  role     String   @default("member")
   joinedAt DateTime @default(now())
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  chat     Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user     User     @relation("UserGroupMembers", fields: [userId], references: [id], onDelete: Cascade)
+  chat     Chat     @relation("ChatGroupMembers", fields: [chatId], references: [id], onDelete: Cascade)
 
   @@unique([userId, chatId])
 }
 
 model Message {
-  id                Int           @id @default(autoincrement())
-  chatId            Int
-  senderId          Int
+  id                String        @id @default(uuid())
+  chatId            String
+  senderId          String
   content           String
   contentType       String        @default("text")
   sentAt            DateTime      @default(now())
   editedAt          DateTime?
   isEdited          Boolean       @default(false)
   status            String        @default("sent")
-  replyToId         Int?
+  replyToId         String?
   chat              Chat          @relation(fields: [chatId], references: [id], onDelete: Cascade)
   sender            User          @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
   replyTo           Message?      @relation("Replies", fields: [replyToId], references: [id], onDelete: SetNull)
@@ -77,9 +71,9 @@ model Message {
 }
 
 model ReadReceipt {
-  id        Int      @id @default(autoincrement())
-  messageId Int
-  userId    Int
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
   readAt    DateTime @default(now())
   message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
   user      User     @relation("UserReadReceipts", fields: [userId], references: [id], onDelete: Cascade)
@@ -88,10 +82,10 @@ model ReadReceipt {
 }
 
 model UserSettings {
-  id              Int      @id @default(autoincrement())
-  userId          Int      @unique
+  id              String   @id @default(uuid())
+  userId          String   @unique
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   notifications   Boolean  @default(true)
-  privacySettings Json? // e.g., { "showLastSeen": true, "showStatus": true }
+  privacySettings Json?
   updatedAt       DateTime @updatedAt
 }
