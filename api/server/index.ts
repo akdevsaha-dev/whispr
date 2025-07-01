@@ -2,8 +2,11 @@ import express from "express";
 import dotenv from "dotenv"
 import authRoutes from "./routes/auth.route"
 import messageRoutes from "./routes/message.route"
+import cookieParser from "cookie-parser";
+
 const app = express();
 app.use(express.json())
+app.use(cookieParser())
 dotenv.config()
 const port = process.env.PORT;
 

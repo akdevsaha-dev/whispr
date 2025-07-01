@@ -110,7 +110,7 @@ export const signin = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
     const prisma = new PrismaClient()
     try {
-        const userId = (req as any).user.id;
+        const userId = (req as any).user;
         await prisma.user.update({
             where: {
                 id: userId
@@ -123,6 +123,7 @@ export const logout = async (req: Request, res: Response) => {
             maxAge: 0,
             httpOnly: true
         })
+        res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         console.error(error)
         console.log("Error in logout controller")
