@@ -65,7 +65,7 @@ model Message {
   replyToId         String?
   chat              Chat          @relation(fields: [chatId], references: [id], onDelete: Cascade)
   sender            User          @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  replyTo           Message?      @relation("Replies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replyTo           Message?      @relation("Replies", fields: [replyToId], references: [id], onDelete: Cascade)
   replies           Message[]     @relation("Replies")
   readReceipts      ReadReceipt[]
   lastMessageInChat Chat?         @relation("LastMessage")

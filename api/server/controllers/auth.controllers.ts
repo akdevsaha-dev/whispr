@@ -2,6 +2,7 @@ import { Request, Response } from "express"
 import bcrypt from "bcrypt"
 import { generateToken } from "../utils/index.utils";
 import { PrismaClient } from "../../generated/prisma";
+import cloudinary from "../config/cloudinary";
 
 
 export const signup = async (req: Request, res: Response) => {
@@ -130,5 +131,45 @@ export const logout = async (req: Request, res: Response) => {
         res.status(500).json({
             message: "Internal server error"
         })
+    }
+}
+
+export const updateProfile = async (req: Request, res: Response) => {
+    const prisma = new PrismaClient()
+    try {
+        const { profilePicture } = req.body;
+        const userId = (req as any).user;
+        if (!profilePicture) {
+            res.status(400).json({
+                message: "Profile picture is required"
+            })
+        }
+        const pictureResponse = await cloudinary.uploader.upload(profilePicture)
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: {
+                profilePicture: pictureResponse.secure_url
+            }
+        })
+        if (!updatedUser) {
+            res.status(400).json({
+                message: "Error while updating profile picture!"
+            })
+            return;
+        }
+        res.status(200).json({
+            message: "Profile picture updated successfully",
+            user: updatedUser
+        })
+        return;
+    } catch (error) {
+        console.error(error);
+        console.log("error in the updateProfile controller")
+        res.status(500).json({
+            message: "Error updating profile",
+        });
+        return;
     }
 }
