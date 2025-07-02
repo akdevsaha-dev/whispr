@@ -23,6 +23,8 @@ model User {
   groupMembers   GroupMember[] @relation("UserGroupMembers")
   settings       UserSettings?
   readReceipts   ReadReceipt[] @relation("UserReadReceipts")
+  contacts       Contact[]     @relation("OwnerContacts")
+  addedBy        Contact[]     @relation("AddedContacts")
 }
 
 model Chat {
@@ -87,4 +89,16 @@ model UserSettings {
   notifications   Boolean  @default(true)
   privacySettings Json?
   updatedAt       DateTime @updatedAt
+}
+
+model Contact {
+  id        String   @default(uuid())
+  ownerId   String
+  contactId String
+  addedAt   DateTime @default(now())
+  owner     User     @relation("OwnerContacts", fields: [ownerId], references: [id])
+  contact   User     @relation("AddedContacts", fields: [contactId], references: [id])
+  userId    String
+
+  @@unique([ownerId, contactId])
 }
