@@ -14,9 +14,9 @@ const port = process.env.PORT;
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
-app.use("api/contacts", contactRouter);
-app.use("api/users", userRouter)
-app.use("api/chat", chatRouter)
+app.use("/api/contacts", contactRouter);
+app.use("/api/users", userRouter)
+app.use("/api/chat", chatRouter)
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

@@ -5,7 +5,7 @@ const router = express.Router()
 router.post("/create", createChat)
 router.post("/create/group", createGroupChat)
 router.get("/all/:userId", getUserChats)
-router.get("/:id", getChatById)
+router.get("/:chatId", getChatById)
 
 export default router;
 
