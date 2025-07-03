@@ -72,7 +72,7 @@ cd whispr
 5. Run migrations:
 
    ```bash
-   npx prisma migrate dev --name init
+   pnpm prisma migrate dev --name init
    ```
 
 ### 3. Configure Environment Variables
@@ -97,14 +97,14 @@ PORT=3000
 
 ```bash
 cd frontend
-npm install
+pnpm install
 ```
 
 **Backend**:
 
 ```bash
 cd ../backend
-npm install
+pnpm install
 ```
 
 ### 5. Run Locally
@@ -113,14 +113,14 @@ npm install
 
 ```bash
 cd backend
-npm start
+pnpm start
 ```
 
 **Frontend**:
 
 ```bash
 cd frontend
-npm run dev
+pnpm run dev
 ```
 
 Open http://localhost:3000 in your browser to test the app.
