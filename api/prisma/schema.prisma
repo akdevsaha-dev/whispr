@@ -98,7 +98,5 @@ model Contact {
   addedAt   DateTime @default(now())
   owner     User     @relation("OwnerContacts", fields: [ownerId], references: [id])
   contact   User     @relation("AddedContacts", fields: [contactId], references: [id])
-  userId    String
-
   @@unique([ownerId, contactId])
 }
