@@ -1,10 +1,9 @@
 import { Request, Response } from "express"
 import { PrismaClient } from "../../generated/prisma";
 const prisma = new PrismaClient()
+
 export const createChat = async (req: Request, res: Response) => {
-
     const { senderId, receiverId } = req.body;
-
     if (!senderId || !receiverId || senderId === receiverId) {
         res.status(400).json({
             error: "both user id must be provided and different!"
