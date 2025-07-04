@@ -132,7 +132,8 @@ export const logout = async (req: Request, res: Response) => {
                 id: userId
             },
             data: {
-                status: "offline"
+                status: "offline",
+                lastSeen: new Date(),
             }
         })
         res.cookie("jwt", "", {
