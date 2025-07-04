@@ -32,6 +32,14 @@ export const signup = async (req: Request, res: Response) => {
             })
             if (user) {
                 generateToken(user.id, res)
+                await prisma.user.update({
+                    where: {
+                        id: user.id
+                    },
+                    data: {
+                        status: 'online'
+                    }
+                })
                 res.status(200).json({
                     id: user.id,
                     email: user.email,
@@ -90,7 +98,14 @@ export const signin = async (req: Request, res: Response) => {
             return;
         }
         generateToken(user.id, res)
-
+        await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                status: 'online'
+            }
+        })
         res.status(200).json({
             id: user.id,
             email: user.email,
