@@ -51,7 +51,8 @@ const paraWordVariants: Variants = {
   },
 };
 
-export const LoginComp = () => {
+export const SignupComp = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   return (
@@ -94,6 +95,19 @@ export const LoginComp = () => {
         </div>
         <div className="mt-20 flex w-[60%] flex-col items-center">
           <InputBox
+            label="Username*"
+            placeholder="Enter username"
+            inputType="text"
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                console.log("Hello bhai");
+              }
+            }}
+          />
+          <InputBox
             label="Email*"
             placeholder="Enter email address"
             inputType="email"
@@ -130,7 +144,7 @@ export const LoginComp = () => {
                 <MoveRight color="black" width={13} />
               </div>
               <Link href="/login" className="text-sm">
-                Sign in
+                Get started
               </Link>
             </motion.div>
           </div>

@@ -47,7 +47,8 @@ export const initSocket = (server: any) => {
                     id: userId
                 },
                 data: {
-                    status: 'offline'
+                    status: 'offline',
+                    lastSeen: new Date()
                 }
             })
             socket.broadcast.emit("user-status-updated", {

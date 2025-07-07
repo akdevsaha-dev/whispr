@@ -28,7 +28,8 @@ export const protectRoute = async (req: Request, res: Response, next: NextFuncti
             }
         })
         if (!user) {
-            return res.status(401).json({ message: "Unauthorized - user not found" });
+            res.status(401).json({ message: "Unauthorized - user not found" });
+            return
         }
         //@ts-ignore
         req.user = user?.id;

@@ -2,8 +2,9 @@
 import { motion, Variants } from "motion/react";
 import { Navbar } from "./navbar";
 import Link from "next/link";
-import { MoveRight, Zap } from "lucide-react";
+import { Key, MoveRight, Zap } from "lucide-react";
 import Image from "next/image";
+import { div } from "motion/react-client";
 
 const headingText = "Stay connected without trying hard.";
 const words = headingText.split(" ");
@@ -53,7 +54,7 @@ const paraWordVariants: Variants = {
 };
 export const HeroSection = () => {
   return (
-    <div className="min-h-screen w-full">
+    <div className="min-h-screen w-full bg-[#FFFEFC]">
       <div className="flex min-h-screen w-full flex-col items-center bg-[#F5F3EE]">
         <Navbar />
         <div className="w-[55%] pt-[12vh]">
@@ -99,7 +100,7 @@ export const HeroSection = () => {
               <div className="rounded-[10px] bg-black px-2 py-[4px]">
                 <MoveRight color="white" width={13} />
               </div>
-              <Link href="/login" className="text-sm">
+              <Link href="/signup" className="text-sm">
                 Get started
               </Link>
             </motion.div>
@@ -148,7 +149,7 @@ export const HeroSection = () => {
               or switch between five different platforms just to stay close.
             </div>
             <Link
-              href={"/login"}
+              href={"/signup"}
               className="mt-8 flex gap-2 hover:font-semibold"
             >
               <div>Sign up</div>
@@ -233,7 +234,7 @@ export const HeroSection = () => {
                 the moment.
               </div>
               <Link
-                href={"/login"}
+                href={"/signup"}
                 className="mt-8 flex gap-2 hover:font-semibold"
               >
                 <div>Sign up</div>
@@ -285,6 +286,58 @@ export const HeroSection = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="mt-14 flex w-full flex-col items-center">
+        <div className="w-[700px] text-center text-5xl font-semibold">
+          Wone is the human-centered product in the world of AI.
+        </div>
+        <div className="mt-4 text-lg">
+          {" "}
+          Pioneering the next evolution of human connection.
+        </div>
+        <div className="text-lg">
+          Engineered with the world’s leading experts in real-time
+          communication.
+        </div>
+      </div>
+      <div className="mt-28 mb-10 flex min-h-[200vh] w-full justify-center">
+        <div className="flex w-[94%] justify-center rounded-[35px] border-4 border-stone-100"></div>
+      </div>
+      <div className="mt-10 mb-10 flex min-h-[52vh] w-full justify-center">
+        <div className="flex w-[94%] justify-between rounded-[40px] bg-black">
+          <div className="flex flex-col">
+            <div className="col-span-3 mt-20 ml-20 font-sans text-4xl font-bold text-white">
+              whisper{" "}
+            </div>
+            <div className="mt-5 ml-20 w-[300px] text-lg font-thin text-white">
+              Your own, personal call room. Video. Voice. Chat. Instantly.
+            </div>
+            <div className="mt-14 ml-20 flex w-[150px] cursor-pointer items-center gap-4 rounded-[16px] bg-white px-3 py-[16px] pl-6">
+              <div className="rounded-[10px] bg-black px-2 py-[4px]">
+                <MoveRight color="white" width={13} />
+              </div>
+              <Link href="/signup" className="text-sm">
+                Sign up
+              </Link>
+            </div>
+          </div>
+          <div className="flex flex-col text-sm text-white">
+            <div className="mt-24 mr-[200px] mb-8">Product</div>
+            <div className="space-y-3">
+              {["Overview", "Sourcing", "Evaluation", "Communication"].map(
+                (item) => (
+                  <div
+                    key={item}
+                    className="cursor-pointer hover:text-neutral-300"
+                  >
+                    {" "}
+                    {item}{" "}
+                  </div>
+                ),
+              )}
             </div>
           </div>
         </div>

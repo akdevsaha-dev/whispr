@@ -4,9 +4,8 @@ import { generateToken } from "../utils/index.utils";
 import { PrismaClient } from "../../generated/prisma";
 import cloudinary from "../config/cloudinary";
 
-
+const prisma = new PrismaClient()
 export const signup = async (req: Request, res: Response) => {
-    const prisma = new PrismaClient()
     const { username, email, password } = req.body;
     try {
         if (password.length < 6) {
@@ -71,17 +70,13 @@ export const signup = async (req: Request, res: Response) => {
 
 
 export const signin = async (req: Request, res: Response) => {
-    const prisma = new PrismaClient()
-
     try {
-
         const { email, password } = req.body
         const user = await prisma.user.findUnique({
             where: {
                 email
             }
         })
-
         if (!user) {
             res.status(500).json({
                 message: "User deos not exist, please create an account!"
@@ -124,9 +119,13 @@ export const signin = async (req: Request, res: Response) => {
 }
 
 export const logout = async (req: Request, res: Response) => {
-    const prisma = new PrismaClient()
+
     try {
         const userId = (req as any).user;
+        if (!userId) {
+            res.status(401).json({ message: "Unauthorized: user ID missing" });
+            return;
+        }
         await prisma.user.update({
             where: {
                 id: userId
@@ -141,12 +140,14 @@ export const logout = async (req: Request, res: Response) => {
             httpOnly: true
         })
         res.status(200).json({ message: "Logged out successfully" });
+        return;
     } catch (error) {
         console.error(error)
         console.log("Error in logout controller")
         res.status(500).json({
             message: "Internal server error"
         })
+        return;
     }
 }
 
@@ -159,6 +160,8 @@ export const updateProfile = async (req: Request, res: Response) => {
             res.status(400).json({
                 message: "Profile picture is required"
             })
+            
+            return;
         }
         const pictureResponse = await cloudinary.uploader.upload(profilePicture)
         const updatedUser = await prisma.user.update({
