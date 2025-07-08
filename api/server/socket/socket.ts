@@ -39,6 +39,22 @@ export const initSocket = (server: any) => {
             userId,
             status: "online"
         })
+        socket.on("joinChat", ({ chatId }) => {
+            socket.join(chatId);
+            console.log(`User ${userId} joined chat ${chatId}`);
+        });
+        socket.on("typing", ({ chatId }) => {
+            socket.to(chatId).emit("userTyping", {
+                userId,
+                chatId
+            })
+        })
+        socket.on("stopTyping", ({ chatId }) => {
+            socket.to(chatId).emit("userStoppedTyping", {
+                userId,
+                chatId
+            })
+        })
         // Handle Disconnect
         socket.on("disconnect", async () => {
             console.log(`Socket disconnected: ${socket.id} (userId: ${userId})`)
