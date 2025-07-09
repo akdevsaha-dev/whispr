@@ -32,7 +32,13 @@ export const protectRoute = async (req: Request, res: Response, next: NextFuncti
             return
         }
         //@ts-ignore
-        req.user = user?.id;
+        req.user = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            profilePicture: user.profilePicture,
+            createdAt: user.createdAt
+        }
         next();
     } catch (error) {
         console.error(error)

@@ -121,7 +121,7 @@ export const signin = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
 
     try {
-        const userId = (req as any).user;
+        const userId = (req as any).user.id;
         if (!userId) {
             res.status(401).json({ message: "Unauthorized: user ID missing" });
             return;

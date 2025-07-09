@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export const getMessages = async (req: Request, res: Response) => {
     try {
         const { id: userTochatId } = req.params;
-        const currentUserId = (req as any).user;
+        const currentUserId = (req as any).user.id;
 
         const messages = await prisma.message.findMany({
             where: {
