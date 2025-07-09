@@ -44,6 +44,7 @@ export const signup = async (req: Request, res: Response) => {
                     email: user.email,
                     username: user.username,
                     profilePicture: user.profilePicture,
+                    status: user.status
                 })
                 return;
             } else {
