@@ -9,4 +9,5 @@ router.post("/signup", signup)
 router.post("/signin", signin)
 router.post("/logout", protectRoute, logout)
 router.post("/updatepfp", protectRoute, updateProfile)
+router.get("/checkAuth", protectRoute, checkAuth)
 export default router;  

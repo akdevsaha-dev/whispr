@@ -151,6 +151,18 @@ export const logout = async (req: Request, res: Response) => {
     }
 }
 
+export const checkAuth = async (req: Request, res: Response) => {
+
+    try {
+        //@ts-ignore
+        res.status(200).json(req.user)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({
+            error: "Internal server error"
+        })
+    }
+}
 export const updateProfile = async (req: Request, res: Response) => {
     const prisma = new PrismaClient()
     try {
@@ -160,7 +172,7 @@ export const updateProfile = async (req: Request, res: Response) => {
             res.status(400).json({
                 message: "Profile picture is required"
             })
-            
+
             return;
         }
         const pictureResponse = await cloudinary.uploader.upload(profilePicture)
