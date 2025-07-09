@@ -1,5 +1,5 @@
 import express from "express"
-import { logout, signin, signup, updateProfile } from "../controllers/auth.controllers"
+import { checkAuth, logout, signin, signup, updateProfile } from "../controllers/auth.controllers"
 import { protectRoute } from "../middleware/protectRoute"
 
 
