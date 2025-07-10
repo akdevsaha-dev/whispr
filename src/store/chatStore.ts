@@ -85,6 +85,18 @@ export const useChatStore = create<chatStore>((set) => ({
             set({ isCreatingGroupChat: false })
         }
     },
+    getUserChats: async (data: { userId: string }) => {
+        set({ isGettingUserChats: true })
+        try {
+            const res = await axiosInstance.get<{ chats: Chat[] }>(`/chat/all/${data.userId}`)
+            set({ chats: res.data.chats })
+        } catch (error) {
+            console.error("Error fetching chats")
+            toast.error("Failed to fetch chats!")
+        } finally {
+            set({ isGettingUserChats: false })
+        }
+    }
 
 
 }))
