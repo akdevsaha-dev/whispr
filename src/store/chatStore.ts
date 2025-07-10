@@ -28,11 +28,11 @@ type chatStore = {
     selectedChat: Chat | null
     isCreatingChat: boolean;
     isCreatingGroupChat: boolean;
-    // isGettingUserChats: boolean;
+    isGettingUserChats: boolean;
     // isGettingChatById: boolean;
     createChat: (data: { senderId: string, receiverId: string }) => void
     createGroupChat: (data: { userIds: string[], name: string }) => void
-    // getUserChats: (data: { userId: string }) => void
+    getUserChats: (data: { userId: string }) => void
     // getChatById: (data: { chatId: string }) => void
     setChats: (chats: Chat[]) => void
     setSelectedChat: (chat: Chat) => void
@@ -44,7 +44,7 @@ export const useChatStore = create<chatStore>((set) => ({
     isCreatingChat: false,
     isCreatingGroupChat: false,
     // isGettingChatById: false,
-    // isGettingUserChats: false,
+    isGettingUserChats: false,
 
     setChats: (chats: Chat[]) => set({ chats }),
     setSelectedChat: (chat: Chat | null) => set({ selectedChat: chat }),
@@ -62,11 +62,29 @@ export const useChatStore = create<chatStore>((set) => ({
             }))
         } catch (error) {
             console.error("Error creating chat", error)
+            toast.error("Failed to create chat!")
         } finally {
             set({ isCreatingChat: false })
         }
     },
-     
-    
+
+    createGroupChat: async (data: { userIds: string[], name: string }) => {
+        set({ isCreatingGroupChat: true })
+        try {
+            const res = await axiosInstance.post<{ chat: Chat }>("/chat/create/group", data)
+            const newChat = res.data.chat
+            set((state) => ({
+                selectedChat: newChat,
+                chats: [newChat, ...state.chats]
+            }
+            ))
+        } catch (error) {
+            console.error("Error creating group!")
+            toast.error("Error creating group!")
+        } finally {
+            set({ isCreatingGroupChat: false })
+        }
+    },
+
 
 }))
