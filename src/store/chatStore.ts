@@ -1,4 +1,5 @@
 import { axiosInstance } from "@/lib/axios";
+import { data } from "motion/react-client";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
@@ -29,11 +30,11 @@ type chatStore = {
     isCreatingChat: boolean;
     isCreatingGroupChat: boolean;
     isGettingUserChats: boolean;
-    // isGettingChatById: boolean;
+    isGettingChatById: boolean;
     createChat: (data: { senderId: string, receiverId: string }) => void
     createGroupChat: (data: { userIds: string[], name: string }) => void
     getUserChats: (data: { userId: string }) => void
-    // getChatById: (data: { chatId: string }) => void
+    getChatById: (data: { chatId: string }) => void
     setChats: (chats: Chat[]) => void
     setSelectedChat: (chat: Chat) => void
 }
@@ -43,7 +44,7 @@ export const useChatStore = create<chatStore>((set) => ({
     selectedChat: null,
     isCreatingChat: false,
     isCreatingGroupChat: false,
-    // isGettingChatById: false,
+    isGettingChatById: false,
     isGettingUserChats: false,
 
     setChats: (chats: Chat[]) => set({ chats }),
@@ -79,7 +80,7 @@ export const useChatStore = create<chatStore>((set) => ({
             }
             ))
         } catch (error) {
-            console.error("Error creating group!")
+            console.error("Error creating group!", error)
             toast.error("Error creating group!")
         } finally {
             set({ isCreatingGroupChat: false })
@@ -91,12 +92,23 @@ export const useChatStore = create<chatStore>((set) => ({
             const res = await axiosInstance.get<{ chats: Chat[] }>(`/chat/all/${data.userId}`)
             set({ chats: res.data.chats })
         } catch (error) {
-            console.error("Error fetching chats")
+            console.error("Error fetching chats", error)
             toast.error("Failed to fetch chats!")
         } finally {
             set({ isGettingUserChats: false })
         }
+    },
+
+    getChatById: async (data: { chatId: string }) => {
+        set({ isGettingChatById: true })
+        try {
+            const res = await axiosInstance.get<{ chat: Chat }>(`/chat/${data.chatId}`)
+            set({ selectedChat: res.data.chat })
+        } catch (error) {
+            console.error("Error fetching chat by Id", error)
+            toast.error("Failed to fetch chat")
+        } finally {
+            set({ isGettingChatById: false })
+        }
     }
-
-
 }))
