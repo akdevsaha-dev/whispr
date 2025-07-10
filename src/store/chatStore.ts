@@ -1,0 +1,72 @@
+import { axiosInstance } from "@/lib/axios";
+import toast from "react-hot-toast";
+import { create } from "zustand";
+
+type User = {
+    id: string,
+    username: string,
+    email: string
+}
+
+type Message = {
+    id: string
+    content: string
+    sender: User
+    createdAt: string
+}
+type Chat = {
+    id: string;
+    isGroupChat: boolean;
+    name?: string;
+    participants: User[];
+    messages: Message[];
+    lastMessage: Message | null
+}
+
+type chatStore = {
+    chats: Chat[];
+    selectedChat: Chat | null
+    isCreatingChat: boolean;
+    isCreatingGroupChat: boolean;
+    // isGettingUserChats: boolean;
+    // isGettingChatById: boolean;
+    createChat: (data: { senderId: string, receiverId: string }) => void
+    createGroupChat: (data: { userIds: string[], name: string }) => void
+    // getUserChats: (data: { userId: string }) => void
+    // getChatById: (data: { chatId: string }) => void
+    setChats: (chats: Chat[]) => void
+    setSelectedChat: (chat: Chat) => void
+}
+
+export const useChatStore = create<chatStore>((set) => ({
+    chats: [],
+    selectedChat: null,
+    isCreatingChat: false,
+    isCreatingGroupChat: false,
+    // isGettingChatById: false,
+    // isGettingUserChats: false,
+
+    setChats: (chats: Chat[]) => set({ chats }),
+    setSelectedChat: (chat: Chat | null) => set({ selectedChat: chat }),
+
+    createChat: async (data: { senderId: string, receiverId: string }) => {
+        set({ isCreatingChat: true })
+        try {
+            const res = await axiosInstance.post<{ chat: Chat }>("/chat/create", data)
+            const newChat = res.data.chat;
+            set((state) => ({
+                selectedChat: newChat,
+                chats: state.chats.some((c) => c.id === newChat.id) ?
+                    state.chats
+                    : [newChat, ...state.chats]
+            }))
+        } catch (error) {
+            console.error("Error creating chat", error)
+        } finally {
+            set({ isCreatingChat: false })
+        }
+    },
+     
+    
+
+}))
