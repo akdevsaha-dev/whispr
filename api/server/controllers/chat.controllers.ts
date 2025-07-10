@@ -51,6 +51,7 @@ export const createChat = async (req: Request, res: Response) => {
         res.status(201).json({
             chat: newChat
         })
+        return;
     } catch (error) {
         console.error(error)
         res.status(400).json({
@@ -81,6 +82,7 @@ export const createGroupChat = async (req: Request, res: Response) => {
             },
         })
         res.status(201).json({ chat })
+        return;
     } catch (error) {
         res.status(500).json({
             error: "Failed to create group chat."
@@ -90,6 +92,10 @@ export const createGroupChat = async (req: Request, res: Response) => {
 
 export const getUserChats = async (req: Request, res: Response) => {
     try {
+        const loggedInUserId = (req as any).user.id;
+        if (req.params.userId != loggedInUserId) {
+            res.status(403).json({ error: "Forbidden: Can't access other's chat" })
+        }
         const chats = await prisma.chat.findMany({
             where: {
                 participants: {
@@ -104,10 +110,12 @@ export const getUserChats = async (req: Request, res: Response) => {
             }
         })
         res.json({ chats })
+        return;
     } catch (error) {
         res.status(500).json({
             error: "Failed to get chats"
         })
+        return;
     }
 }
 
@@ -123,8 +131,10 @@ export const getChatById = async (req: Request, res: Response) => {
             }
         })
         res.json({ chat })
+        return;
     } catch (error) {
         console.error(error)
         res.status(404).json({ error: "Chat not found" });
+        return;
     }
 }
