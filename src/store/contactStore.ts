@@ -1,8 +1,11 @@
 
 
-// type User = {
-//     id: string
-// }
+type User = {
+    id: string
+    username: string
+    email: string
+    profilePicture: string | null
+}
 
 import { axiosInstance } from "@/lib/axios"
 import toast from "react-hot-toast"
@@ -25,18 +28,22 @@ type contactStore = {
     isAddingContact: boolean
     isRemovingContact: boolean
     isGettingContact: boolean
-    // isSearchingUserByEmail: boolean
+    isSearchingUserByEmail: boolean
+    searchedUser: User | null
     addContact: (data: { ownerId: string, contactId: string }) => void
     removeContact: (data: { ownerId: string, contactId: string }) => void
     getContacts: (data: { userId: string }) => void
-    // searchUserByEmail: (data: { email: string }) => void
+    searchUserByEmail: (data: { email: string }) => void
+    resetSearch: () => void
 }
 
 export const useContactStore = create<contactStore>((set) => ({
     contact: [],
+    searchedUser: null,
     isAddingContact: false,
     isRemovingContact: false,
     isGettingContact: false,
+    isSearchingUserByEmail: false,
 
     addContact: async (data: { ownerId: string, contactId: string }) => {
         set({ isAddingContact: true })
@@ -46,7 +53,7 @@ export const useContactStore = create<contactStore>((set) => ({
             set((state) => {
                 const alreadyExists = state.contact.some((c) => c.id === newContact.id)
                 if (alreadyExists) {
-                    toast("User is already in your contact list.")
+                    toast.error("User is already in your contact list.")
                     return { contact: state.contact }
                 }
                 toast.success("Contact added!")
@@ -81,11 +88,7 @@ export const useContactStore = create<contactStore>((set) => ({
     getContacts: async (data: { userId: string }) => {
         set({ isGettingContact: true })
         try {
-            const res = await axiosInstance.get(`/contacts/${data.userId}`, {
-                data: {
-                    userId: data.userId
-                }
-            })
+            const res = await axiosInstance.get(`/contacts/${data.userId}`)
             set({ contact: res.data.allContacts })
         } catch (error) {
             console.error("Error getting contacts.", error)
@@ -93,5 +96,25 @@ export const useContactStore = create<contactStore>((set) => ({
         } finally {
             set({ isGettingContact: false })
         }
+    },
+    searchUserByEmail: async (data: { email: string }) => {
+        set({ isSearchingUserByEmail: true, searchedUser: null })
+        try {
+            const res = await axiosInstance.get("/contacts/search", {
+                params: {
+                    email: data.email
+                }
+            })
+            set({ searchedUser: res.data.user })
+        } catch (error) {
+            console.error("Error seaching user.", error)
+            toast.error("Error searching user")
+        } finally {
+            set({ isSearchingUserByEmail: false })
+        }
+    },
+
+    resetSearch: () => {
+        set({ searchedUser: null })
     }
 }))
