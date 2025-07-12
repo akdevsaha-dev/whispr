@@ -19,7 +19,6 @@ export const getMessages = async (req: Request, res: Response) => {
                 createdAt: 'asc'
             }
         });
-
         res.status(200).json(messages);
     } catch (error) {
         res.status(500).json({ message: "Failed to get messages", error });
@@ -28,12 +27,12 @@ export const getMessages = async (req: Request, res: Response) => {
 
 export const sendMessages = async (req: Request, res: Response) => {
     try {
-        const { message, senderId, receiverId } = req.body;
-
+        const { content, receiverId } = req.body;
+        const currentUserId = (req as any).user.id;
         const newMessage = await prisma.message.create({
             data: {
-                message,
-                senderId,
+                content,
+                senderId: currentUserId,
                 receiverId
             }
         });
