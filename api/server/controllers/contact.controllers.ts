@@ -27,6 +27,12 @@ export const addContact = async (req: Request, res: Response) => {
 
 export const removeContact = async (req: Request, res: Response) => {
     const { ownerId, contactId } = req.body;
+    if (!ownerId || !contactId) {
+        res.status(200).json({
+            error: "ERROR."
+        })
+        return;
+    }
     try {
         await prisma.contact.delete({
             where: {
