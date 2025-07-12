@@ -24,11 +24,11 @@ type contactStore = {
     contact: Contact[]
     isAddingContact: boolean
     isRemovingContact: boolean
-    // isGettingContact: boolean
+    isGettingContact: boolean
     // isSearchingUserByEmail: boolean
     addContact: (data: { ownerId: string, contactId: string }) => void
     removeContact: (data: { ownerId: string, contactId: string }) => void
-    // getContacts: (data: { userId: string }) => void
+    getContacts: (data: { userId: string }) => void
     // searchUserByEmail: (data: { email: string }) => void
 }
 
@@ -36,6 +36,8 @@ export const useContactStore = create<contactStore>((set) => ({
     contact: [],
     isAddingContact: false,
     isRemovingContact: false,
+    isGettingContact: false,
+
     addContact: async (data: { ownerId: string, contactId: string }) => {
         set({ isAddingContact: true })
         try {
@@ -61,7 +63,7 @@ export const useContactStore = create<contactStore>((set) => ({
     removeContact: async (data: { ownerId: string, contactId: string }) => {
         set({ isRemovingContact: true })
         try {
-            const res = await axiosInstance.delete("/contacts/removeContact", {
+            await axiosInstance.delete("/contacts/removeContact", {
                 data: { ownerId: data.ownerId, contactId: data.contactId },
             });
             set((state) => ({
@@ -73,6 +75,23 @@ export const useContactStore = create<contactStore>((set) => ({
             toast.error("Something went wrong.")
         } finally {
             set({ isRemovingContact: false })
+        }
+    },
+
+    getContacts: async (data: { userId: string }) => {
+        set({ isGettingContact: true })
+        try {
+            const res = await axiosInstance.get(`/contacts/${data.userId}`, {
+                data: {
+                    userId: data.userId
+                }
+            })
+            set({ contact: res.data.allContacts })
+        } catch (error) {
+            console.error("Error getting contacts.", error)
+            toast.error("Error getting contacts.")
+        } finally {
+            set({ isGettingContact: false })
         }
     }
 }))
