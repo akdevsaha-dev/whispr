@@ -55,6 +55,9 @@ export const SignupComp = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const submitHandler = () => {};
+
   return (
     <div className="min-h-screen w-full bg-[#F5F3EE]">
       <Navbar />
@@ -99,7 +102,7 @@ export const SignupComp = () => {
             placeholder="Enter username"
             inputType="text"
             onChange={(e) => {
-              setEmail(e.target.value);
+              setUsername(e.target.value);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -143,9 +146,9 @@ export const SignupComp = () => {
               <div className="rounded-[10px] bg-white px-3 py-[4px]">
                 <MoveRight color="black" width={13} />
               </div>
-              <Link href="/login" className="text-sm">
+              <button className="text-sm" onClick={submitHandler}>
                 Get started
-              </Link>
+              </button>
             </motion.div>
           </div>
         </div>
