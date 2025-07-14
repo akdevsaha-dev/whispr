@@ -1,7 +1,7 @@
 import { axiosInstance } from "@/lib/axios"
 import { create } from "zustand"
-import { checkAuth } from "../../api/server/controllers/auth.controllers"
 import toast from "react-hot-toast"
+import axios from "axios"
 
 type authUser = {
     id: string,
@@ -67,9 +67,13 @@ export const useAuthStore = create<authStore>((set) => ({
             set({ authUser: res.data })
             toast.success("Logged in successfully!")
             return true;
-        } catch (error) {
-            console.error(error)
-            toast.error("Failed to login!")
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                const message = error.response?.data?.message || "Something went wrong";
+                toast.error(message); // 🔥 shows your backend message in a toast
+            } else {
+                toast.error("Unexpected error");
+            }
             return false;
         } finally {
             set({ isLoggingIn: false })

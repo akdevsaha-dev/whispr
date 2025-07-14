@@ -2,9 +2,11 @@
 import { motion, Variants } from "motion/react";
 import { Navbar } from "./navbar";
 import { InputBox } from "./inputBox";
-import { useState } from "react";
-import Link from "next/link";
-import { MoveRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { Loader, MoveRight } from "lucide-react";
+import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const headingText = "Texting just got better. Sign up today";
 const headingWords = headingText.split(" ");
@@ -52,8 +54,24 @@ const paraWordVariants: Variants = {
 };
 
 export const LoginComp = () => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const login = useAuthStore((state) => state.login);
+  const isLoggingIn = useAuthStore((state) => state.isLoggingIn);
+
+  const handleSubmit = async () => {
+    if (!email || !password) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+    const success = await login({ email, password });
+    if (success) {
+      router.push("/chat");
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-[#F5F3EE]">
       <Navbar />
@@ -102,11 +120,12 @@ export const LoginComp = () => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                console.log("Hello bhai");
+                passwordRef.current?.focus();
               }
             }}
           />
           <InputBox
+            ref={passwordRef}
             label="Password*"
             placeholder="Enter Password"
             inputType="password"
@@ -115,12 +134,13 @@ export const LoginComp = () => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                console.log("haha");
+                handleSubmit();
               }
             }}
           />
           <div className="mt-10 flex h-[80px] items-center justify-center">
-            <motion.div
+            <motion.button
+              onClick={handleSubmit}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.3 }}
@@ -129,10 +149,14 @@ export const LoginComp = () => {
               <div className="rounded-[10px] bg-white px-3 py-[4px]">
                 <MoveRight color="black" width={13} />
               </div>
-              <Link href="/login" className="text-sm">
-                Sign in
-              </Link>
-            </motion.div>
+              <div className="text-sm">
+                {isLoggingIn ? (
+                  <Loader className="size-5 animate-spin" />
+                ) : (
+                  "sign in"
+                )}
+              </div>
+            </motion.button>
           </div>
         </div>
       </div>
