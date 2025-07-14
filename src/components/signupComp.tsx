@@ -2,9 +2,11 @@
 import { motion, Variants } from "motion/react";
 import { Navbar } from "./navbar";
 import { InputBox } from "./inputBox";
-import { useState } from "react";
-import Link from "next/link";
-import { MoveRight } from "lucide-react";
+import { useRef, useState } from "react";
+import { Loader, MoveRight } from "lucide-react";
+import { useAuthStore } from "@/store/authStore";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const headingText = "Texting just got better. Sign up today";
 const headingWords = headingText.split(" ");
@@ -52,11 +54,28 @@ const paraWordVariants: Variants = {
 };
 
 export const SignupComp = () => {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const submitHandler = () => {};
+  const signup = useAuthStore((state) => state.signup);
+  const isSigningUp = useAuthStore((state) => state.isSigningUp);
+
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  const submitHandler = async () => {
+    if (!username || !email || !password) {
+      toast.error("All fields are required.");
+      return;
+    }
+
+    const success = await signup({ username, email, password });
+    if (success) {
+      router.push("/chat");
+    }
+  };
 
   return (
     <div className="min-h-screen w-full bg-[#F5F3EE]">
@@ -106,11 +125,12 @@ export const SignupComp = () => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                console.log("Hello bhai");
+                emailRef.current?.focus();
               }
             }}
           />
           <InputBox
+            ref={emailRef}
             label="Email*"
             placeholder="Enter email address"
             inputType="email"
@@ -119,11 +139,12 @@ export const SignupComp = () => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                console.log("Hello bhai");
+                passwordRef.current?.focus();
               }
             }}
           />
           <InputBox
+            ref={passwordRef}
             label="Password*"
             placeholder="Enter Password"
             inputType="password"
@@ -132,12 +153,13 @@ export const SignupComp = () => {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                console.log("haha");
+                submitHandler();
               }
             }}
           />
           <div className="mt-10 flex h-[80px] items-center justify-center">
-            <motion.div
+            <motion.button
+              onClick={submitHandler}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.3 }}
@@ -146,10 +168,14 @@ export const SignupComp = () => {
               <div className="rounded-[10px] bg-white px-3 py-[4px]">
                 <MoveRight color="black" width={13} />
               </div>
-              <button className="text-sm" onClick={submitHandler}>
-                Get started
-              </button>
-            </motion.div>
+              <div className="text-sm">
+                {isSigningUp ? (
+                  <Loader className="size-5 animate-spin" />
+                ) : (
+                  "Get started"
+                )}
+              </div>
+            </motion.button>
           </div>
         </div>
       </div>

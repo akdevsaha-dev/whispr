@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv"
+import cors from "cors"
 import authRoutes from "./routes/auth.route"
 import messageRoutes from "./routes/message.route"
 import contactRouter from "./routes/contact.route"
@@ -9,6 +10,11 @@ import chatRouter from "./routes/chat.route"
 import cookieParser from "cookie-parser";
 import { initSocket } from "./socket/socket";
 const app = express();
+app.use(cors({
+  origin: "http://localhost:3000", // allow requests from this origin
+  credentials: true, // if you're using cookies
+}));
+
 app.use(express.json())
 app.use(cookieParser())
 dotenv.config()

@@ -31,6 +31,5 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
   },
 );
 
-
 // It sets the name of the component for debugging tools like React DevTools and also helps with better error messages in stack traces.
 InputBox.displayName = "InputBox";
