@@ -19,7 +19,7 @@ export const addContact = async (req: Request, res: Response) => {
         })
         res.status(201).json({ contact })
     } catch (error) {
-        res.status(50).json({
+        res.status(500).json({
             error: "Failed to add contact"
         })
     }

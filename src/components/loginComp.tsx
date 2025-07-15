@@ -7,10 +7,11 @@ import { Loader, MoveRight } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
-const headingText = "Texting just got better. Sign up today";
+const headingText = "Welcome back chief, back to mission";
 const headingWords = headingText.split(" ");
-const paraText = "Everything you need to stay connected with your people.";
+const paraText = "Take help of AI to text the girl you are talking to.";
 const paraWords = paraText.split(" ");
 
 const containerVariants: Variants = {
@@ -115,7 +116,26 @@ export const LoginComp = () => {
             ))}
           </motion.div>
         </div>
-        <div className="mt-20 flex w-[60%] flex-col items-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 2,
+            transition: {
+              delay: 1,
+              duration: 0.3,
+            },
+          }}
+          className="mt-3 gap-3 font-thin text-black"
+        >
+          Don't have an account?
+          <Link
+            href={"/signup"}
+            className="ml-2 text-blue-500 underline underline-offset-2"
+          >
+            Sign up
+          </Link>
+        </motion.div>
+        <div className="mt-16 flex w-[60%] flex-col items-center">
           <InputBox
             value={email}
             label="Email*"

@@ -17,7 +17,7 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       <motion.div
         initial={{ x: -20 }}
         animate={{ x: 0 }}
-        className="mx-16 mt-10"
+        className="mx-16 mt-5"
       >
         <div className="">{label}</div>
         <input

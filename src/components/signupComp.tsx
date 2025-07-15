@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signin } from "../../api/server/controllers/auth.controllers";
+import { delay } from "motion";
 
 const headingText = "Texting just got better. Sign up today";
 const headingWords = headingText.split(" ");
@@ -117,15 +118,25 @@ export const SignupComp = () => {
             ))}
           </motion.div>
         </div>
-        <div className="mt-3 gap-3 font-thin text-black">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: 2,
+            transition: {
+              delay: 1,
+              duration: 0.3,
+            },
+          }}
+          className="mt-3 gap-3 font-thin text-black"
+        >
           Already have an account?
           <Link
-            href={"/signin"}
-            className="text-blue-500 underline underline-offset-2"
+            href={"/login"}
+            className="ml-2 text-blue-500 underline underline-offset-2"
           >
             Sign in
           </Link>
-        </div>
+        </motion.div>
         <div className="mt-16 flex w-[60%] flex-col items-center">
           <InputBox
             value={username}
