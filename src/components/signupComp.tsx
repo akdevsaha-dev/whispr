@@ -117,6 +117,7 @@ export const SignupComp = () => {
         </div>
         <div className="mt-20 flex w-[60%] flex-col items-center">
           <InputBox
+            value={username}
             label="Username*"
             placeholder="Enter username"
             inputType="text"
@@ -130,6 +131,7 @@ export const SignupComp = () => {
             }}
           />
           <InputBox
+            value={email}
             ref={emailRef}
             label="Email*"
             placeholder="Enter email address"
@@ -144,6 +146,7 @@ export const SignupComp = () => {
             }}
           />
           <InputBox
+            value={password}
             ref={passwordRef}
             label="Password*"
             placeholder="Enter Password"

@@ -58,16 +58,21 @@ export const LoginComp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const passwordRef = useRef<HTMLInputElement>(null);
+
   const login = useAuthStore((state) => state.login);
   const isLoggingIn = useAuthStore((state) => state.isLoggingIn);
 
   const handleSubmit = async () => {
     if (!email || !password) {
       toast.error("Please fill all the fields");
+      setEmail("");
+      setPassword("");
       return;
     }
     const success = await login({ email, password });
     if (success) {
+      setEmail("");
+      setPassword("");
       router.push("/chat");
     }
   };
@@ -112,6 +117,7 @@ export const LoginComp = () => {
         </div>
         <div className="mt-20 flex w-[60%] flex-col items-center">
           <InputBox
+            value={email}
             label="Email*"
             placeholder="Enter email address"
             inputType="email"
@@ -125,6 +131,7 @@ export const LoginComp = () => {
             }}
           />
           <InputBox
+            value={password}
             ref={passwordRef}
             label="Password*"
             placeholder="Enter Password"

@@ -5,13 +5,14 @@ import { forwardRef } from "react";
 interface InputBoxProps {
   label: string;
   placeholder: string;
+  value: string;
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputType: React.HTMLInputTypeAttribute;
 }
 
 export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
-  ({ label, placeholder, onKeyDown, onChange, inputType }, ref) => {
+  ({ label, placeholder, value, onKeyDown, onChange, inputType }, ref) => {
     return (
       <motion.div
         initial={{ x: -20 }}
@@ -20,6 +21,7 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(
       >
         <div className="">{label}</div>
         <input
+          value={value}
           ref={ref}
           className="mt-3 w-[38vw] rounded-[12px] border-[1px] border-neutral-200 bg-white px-3 py-[16px] text-sm font-thin focus:border-blue-700 focus:outline-none"
           placeholder={placeholder}

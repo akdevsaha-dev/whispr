@@ -14,7 +14,7 @@ type authUser = {
 
 type authStore = {
     authUser: authUser | null
-    checkauth: () => void
+    checkAuth: () => void
     isCheckingAuth: boolean
     isSigningUp: boolean
     isLoggingIn: boolean
@@ -25,25 +25,26 @@ type authStore = {
 }
 
 export const useAuthStore = create<authStore>((set) => ({
+
     authUser: null,
     isSigningUp: false,
     isLoggingIn: false,
     // isUpdatingProfile: false,
     isCheckingAuth: true,
 
-    checkauth: async () => {
-        set({ isCheckingAuth: true })
+    checkAuth: async () => {
+        set({ isCheckingAuth: true });
         try {
-            const res = await axiosInstance.get("/auth/checkAuth")
-            set({ authUser: res.data })
+            const res = await axiosInstance.get("/auth/checkAuth");
+            set({ authUser: res.data });
         } catch (error) {
-            console.error(error)
-            set({ authUser: null })
+            console.error("❌ Auth check failed:", error);
+            set({ authUser: null });
         } finally {
-            set({ isCheckingAuth: false })
+            console.log("🏁 checkAuth() complete");
+            set({ isCheckingAuth: false });
         }
     },
-
     signup: async (data: { username: string, email: string, password: string }): Promise<boolean> => {
         set({ isSigningUp: true })
         try {
